@@ -141,16 +141,19 @@ class _SoundTileState extends State<SoundTile> {
   Widget build(BuildContext context) {
     final provider = Provider.of<SoundProvider>(context, listen: false);
 
-    return GestureDetector(
-      onTap: () async {
-        await _player.stop();
-        await _player.setReleaseMode(ReleaseMode.stop);
-        await _player.play(AssetSource(widget.sound.assetPath));
-      },
-      child: ClipRRect(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        child: Container(
+        splashColor: Colors.white24,
+        onTap: () async {
+          await _player.stop();
+          await _player.setReleaseMode(ReleaseMode.stop);
+          await _player.play(AssetSource(widget.sound.assetPath));
+        },
+        child: Ink(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
             image: DecorationImage(
               image: AssetImage(widget.sound.imagePath),
               fit: BoxFit.cover,
