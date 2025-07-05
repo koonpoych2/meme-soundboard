@@ -5,7 +5,24 @@ class SoundProvider extends ChangeNotifier {
   // Start with an empty list of sounds. Add your own
   // entries pointing to assets in `assets/sounds` and
   // `assets/images`.
-  final List<Sound> _sounds = [];
+  final List<Sound> _sounds = [
+    Sound(
+    id: '1',
+    name: 'Tung Tung sahur',
+    assetPath: 'sounds/tung-tung-sahur.mp3',
+    imagePath: 'assets/images/tung-tung-tung-sahur.jpg',
+    category: 'Nature',
+    isFavorite: false,
+  ),
+  Sound(
+    id: '1',
+    name: 'Plankton Aughhhhh',
+    assetPath: 'sounds/Plankton Aughhhhh.mp3',
+    imagePath: 'assets/images/Plankton Aughhhhh.jpg',
+    category: 'Test',
+    isFavorite: false,
+  ),
+  ];
 
   String _searchQuery = '';
   String _category = 'All';
