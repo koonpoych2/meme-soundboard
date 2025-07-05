@@ -4,49 +4,62 @@ import 'package:audioplayers/audioplayers.dart';
 import '../providers/sound_provider.dart';
 import '../models/sound.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SoundProvider>(context);
+    final isFavoritesPage = _currentIndex == 1;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meme Sound Board'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: provider.setSearch,
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: provider.categories
-                      .map(
-                        (c) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: ChoiceChip(
-                            label: Text(c),
-                            selected: provider.category == c,
-                            onSelected: (_) => provider.setCategory(c),
-                          ),
+        bottom: !isFavoritesPage
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(80),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Search',
+                          prefixIcon: Icon(Icons.search),
                         ),
-                      )
-                      .toList(),
+                        onChanged: provider.setSearch,
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: provider.categories
+                            .map(
+                              (c) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                child: ChoiceChip(
+                                  label: Text(c),
+                                  selected: provider.category == c,
+                                  onSelected: (_) => provider.setCategory(c),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : null,
       ),
     body: SoundGridScreen(sounds: provider.sounds,),
     );
@@ -75,7 +88,27 @@ class SoundGridScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return SoundTile(sound: sounds[index]);
         },
-      );
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download),
+            label: 'Downloads',
+          ),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+    );
   }
 }
 
