@@ -113,9 +113,29 @@ class SoundGridScreen extends StatelessWidget {
   }
 }
 
-class SoundTile extends StatelessWidget {
+class SoundTile extends StatefulWidget {
   final Sound sound;
   const SoundTile({super.key, required this.sound});
+
+  @override
+  State<SoundTile> createState() => _SoundTileState();
+}
+
+class _SoundTileState extends State<SoundTile> {
+  late final AudioPlayer _player;
+  bool _isLooping = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _player = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,15 +143,16 @@ class SoundTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () async {
-        final player = AudioPlayer();
-        await player.play(AssetSource(sound.assetPath));
+        await _player.stop();
+        await _player.setReleaseMode(ReleaseMode.stop);
+        await _player.play(AssetSource(widget.sound.assetPath));
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(sound.imagePath),
+              image: AssetImage(widget.sound.imagePath),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                 Colors.black.withValues(alpha: .25),
@@ -152,7 +173,7 @@ class SoundTile extends StatelessWidget {
                     color: Colors.black.withValues(alpha: .4),
                   ),
                   child: Text(
-                    sound.name,
+                    widget.sound.name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -166,16 +187,41 @@ class SoundTile extends StatelessWidget {
                 ),
               ),
 
+              // Loop Icon at top left
+              Positioned(
+                top: 1,
+                left: 1,
+                child: IconButton(
+                  icon: Icon(
+                    _isLooping ? Icons.repeat_on : Icons.repeat,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    if (_isLooping) {
+                      await _player.stop();
+                      setState(() => _isLooping = false);
+                    } else {
+                      await _player.setReleaseMode(ReleaseMode.loop);
+                      await _player.play(AssetSource(widget.sound.assetPath));
+                      setState(() => _isLooping = true);
+                    }
+                  },
+                ),
+              ),
+
               // Favorite Icon at top right
               Positioned(
                 top: 1,
                 right: 1,
                 child: IconButton(
                   icon: Icon(
-                    sound.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: sound.isFavorite ? Colors.red : Colors.white,
+                    widget.sound.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color:
+                        widget.sound.isFavorite ? Colors.red : Colors.white,
                   ),
-                  onPressed: () => provider.toggleFavorite(sound),
+                  onPressed: () => provider.toggleFavorite(widget.sound),
                 ),
               ),
             ],
