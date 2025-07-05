@@ -62,6 +62,25 @@ class _HomePageState extends State<HomePage> {
             : null,
       ),
     body: SoundGridScreen(sounds: provider.sounds,),
+    bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download),
+            label: 'Downloads',
+          ),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
     );
   }
 }
@@ -88,27 +107,7 @@ class SoundGridScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return SoundTile(sound: sounds[index]);
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.download),
-            label: 'Downloads',
-          ),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
-    );
+      );
   }
 }
 
