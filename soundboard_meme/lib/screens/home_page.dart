@@ -48,11 +48,47 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: provider.sounds.length,
+      body: GridView.builder(
+      padding: const EdgeInsets.all(12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // Change to 4 if you want 4 per row
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 1.2, // Adjust height vs width
+      ),
+      itemCount: provider.sounds.length,
+      itemBuilder: (context, index) {
+        final sound = provider.sounds[index];
+        return SoundTile(sound: sound);
+      },
+    ),
+    );
+  }
+}
+
+class SoundGridScreen extends StatelessWidget {
+  const SoundGridScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final soundProvider = Provider.of<SoundProvider>(context);
+    final sounds = soundProvider.sounds; // or your list of Sound
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Meme Soundboard"),
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Number of tiles per row
+          childAspectRatio: 1, // Adjust for height vs width
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        itemCount: sounds.length,
         itemBuilder: (context, index) {
-          final sound = provider.sounds[index];
-          return SoundTile(sound: sound);
+          return SoundTile(sound: sounds[index]);
         },
       ),
     );
@@ -66,28 +102,70 @@ class SoundTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SoundProvider>(context, listen: false);
-    return ListTile(
-      leading: Image.asset(sound.imagePath, width: 40, height: 40),
-      title: Text(sound.name),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(
-              sound.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: sound.isFavorite ? Colors.red : null,
+
+    return GestureDetector(
+      onTap: () async {
+        final player = AudioPlayer();
+        await player.play(AssetSource(sound.assetPath));
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(sound.imagePath),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withValues(alpha: .25),
+                BlendMode.darken,
+              ),
             ),
-            onPressed: () => provider.toggleFavorite(sound),
           ),
-          IconButton(
-            icon: const Icon(Icons.play_arrow),
-            onPressed: () async {
-              final player = AudioPlayer();
-              await player.play(AssetSource(sound.assetPath));
-            },
+          child: Stack(
+            children: [
+              // Sound name at bottom center
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                  ),
+                  child: Text(
+                    sound.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(blurRadius: 3, color: Colors.black),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Favorite Icon at top right
+              Positioned(
+                top: 1,
+                right: 1,
+                child: IconButton(
+                  icon: Icon(
+                    sound.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: sound.isFavorite ? Colors.red : Colors.white,
+                  ),
+                  onPressed: () => provider.toggleFavorite(sound),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
+
+
