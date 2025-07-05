@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               )
             : null,
       ),
-    body: SoundGridScreen(sounds: provider.sounds,),
+    body: SoundGridScreen(sounds: !isFavoritesPage ? provider.sounds : provider.favoriteSounds,) ,
     bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -100,7 +100,7 @@ class SoundGridScreen extends StatelessWidget {
     return GridView.builder(
         padding: const EdgeInsets.all(12),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Number of tiles per row
+          crossAxisCount: 3, // Number of tiles per row
           childAspectRatio: 1, // Adjust for height vs width
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
