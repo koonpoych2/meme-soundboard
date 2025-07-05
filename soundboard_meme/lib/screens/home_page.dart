@@ -64,7 +64,9 @@ class _HomePageState extends State<HomePage> {
     body: SoundGridScreen(sounds: provider.sounds,),
     bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home), 
+            label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
@@ -89,7 +91,7 @@ class SoundGridScreen extends StatelessWidget {
   final List<Sound> sounds;
   const SoundGridScreen({super.key,required this.sounds});
   
-
+  
   @override
   Widget build(BuildContext context) {
     // final soundProvider = Provider.of<SoundProvider>(context);
