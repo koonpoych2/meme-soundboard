@@ -48,37 +48,22 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Change to 4 if you want 4 per row
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 1.2, // Adjust height vs width
-      ),
-      itemCount: provider.sounds.length,
-      itemBuilder: (context, index) {
-        final sound = provider.sounds[index];
-        return SoundTile(sound: sound);
-      },
-    ),
+    body: SoundGridScreen(sounds: provider.sounds,),
     );
   }
 }
 
 class SoundGridScreen extends StatelessWidget {
-  const SoundGridScreen({super.key});
+  final List<Sound> sounds;
+  const SoundGridScreen({super.key,required this.sounds});
+  
 
   @override
   Widget build(BuildContext context) {
-    final soundProvider = Provider.of<SoundProvider>(context);
-    final sounds = soundProvider.sounds; // or your list of Sound
+    // final soundProvider = Provider.of<SoundProvider>(context);
+    // final sounds = soundProvider.sounds; // or your list of Sound
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Meme Soundboard"),
-      ),
-      body: GridView.builder(
+    return GridView.builder(
         padding: const EdgeInsets.all(12),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // Number of tiles per row
@@ -90,8 +75,7 @@ class SoundGridScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return SoundTile(sound: sounds[index]);
         },
-      ),
-    );
+      );
   }
 }
 
@@ -131,7 +115,7 @@ class SoundTile extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: .4),
                   ),
                   child: Text(
                     sound.name,
