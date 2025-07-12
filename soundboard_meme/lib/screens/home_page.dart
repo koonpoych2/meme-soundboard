@@ -22,6 +22,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meme Sound Board'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              provider.isLooping ? Icons.repeat_on : Icons.repeat,
+            ),
+            onPressed: provider.toggleLooping,
+          ),
+        ],
         bottom: !isFavoritesPage
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(80),
@@ -123,23 +131,33 @@ class SoundTile extends StatefulWidget {
 
 class _SoundTileState extends State<SoundTile> {
   late final AudioPlayer _player;
-  bool _isLooping = false;
+  late final SoundProvider _provider;
+
+  void _onProviderChanged() {
+    _player.setReleaseMode(
+      _provider.isLooping ? ReleaseMode.loop : ReleaseMode.stop,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _player = AudioPlayer();
+    _provider = Provider.of<SoundProvider>(context, listen: false);
+    _provider.addListener(_onProviderChanged);
+    _onProviderChanged();
   }
 
   @override
   void dispose() {
+    _provider.removeListener(_onProviderChanged);
     _player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SoundProvider>(context, listen: false);
+    final provider = _provider;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
@@ -148,7 +166,8 @@ class _SoundTileState extends State<SoundTile> {
         splashColor: Colors.white24,
         onTap: () async {
           await _player.stop();
-          await _player.setReleaseMode(ReleaseMode.stop);
+          await _player.setReleaseMode(
+              provider.isLooping ? ReleaseMode.loop : ReleaseMode.stop);
           await _player.play(AssetSource(widget.sound.assetPath));
         },
         child: Ink(
@@ -190,27 +209,6 @@ class _SoundTileState extends State<SoundTile> {
                 ),
               ),
 
-              // Loop Icon at top left
-              Positioned(
-                top: 1,
-                left: 1,
-                child: IconButton(
-                  icon: Icon(
-                    _isLooping ? Icons.repeat_on : Icons.repeat,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    if (_isLooping) {
-                      await _player.stop();
-                      setState(() => _isLooping = false);
-                    } else {
-                      await _player.setReleaseMode(ReleaseMode.loop);
-                      await _player.play(AssetSource(widget.sound.assetPath));
-                      setState(() => _isLooping = true);
-                    }
-                  },
-                ),
-              ),
 
               // Favorite Icon at top right
               Positioned(

@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## Features
+
+- Global loop toggle button to repeat sounds continuously.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
