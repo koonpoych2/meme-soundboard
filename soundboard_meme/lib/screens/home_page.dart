@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:confetti/confetti.dart';
-import 'package:vibration/vibration.dart';
-import 'dart:io';
 
 import '../providers/sound_provider.dart';
 import '../models/sound.dart';
@@ -97,7 +93,11 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   onSelected: (_) => provider.setCategory(c),
                                 ).animate(target: provider.category == c ? 1 : 0)
-                                  .scale(duration: const Duration(milliseconds: 200), begin: 1.0, end: 1.2),
+                                  .scale(
+                                    duration: const Duration(milliseconds: 200),
+                                    begin: const Offset(1, 1),
+                                    end: const Offset(1.2, 1.2),
+                                  ),
                               ),
                             )
                             .toList(),
@@ -128,7 +128,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Animate(
               target: _currentIndex == 0 ? 1 : 0,
-              effects: const [BounceEffect(duration: Duration(milliseconds: 300))],
+              effects: [
+                ScaleEffect(
+                  duration: const Duration(milliseconds: 300),
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.2, 1.2),
+                  curve: Curves.elasticOut,
+                )
+              ],
               child: const Text('🏠', style: TextStyle(fontSize: 24)),
             ),
             label: 'Home',
@@ -136,7 +143,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Animate(
               target: _currentIndex == 1 ? 1 : 0,
-              effects: const [BounceEffect(duration: Duration(milliseconds: 300))],
+              effects: [
+                ScaleEffect(
+                  duration: const Duration(milliseconds: 300),
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.2, 1.2),
+                  curve: Curves.elasticOut,
+                )
+              ],
               child: const Text('❤️', style: TextStyle(fontSize: 24)),
             ),
             label: 'Favorites',
@@ -144,7 +158,14 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Animate(
               target: _currentIndex == 2 ? 1 : 0,
-              effects: const [BounceEffect(duration: Duration(milliseconds: 300))],
+              effects: [
+                ScaleEffect(
+                  duration: const Duration(milliseconds: 300),
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.2, 1.2),
+                  curve: Curves.elasticOut,
+                )
+              ],
               child: const Text('📥', style: TextStyle(fontSize: 24)),
             ),
             label: 'Downloads',

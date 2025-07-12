@@ -78,7 +78,14 @@ class _SoundTileState extends State<SoundTile> with TickerProviderStateMixin {
     );
 
     return Animate(
-      effects: const [ScaleEffect(begin: 1, end: 1.05)],
+      effects: [
+        ScaleEffect(
+          begin: const Offset(1, 1),
+          end: const Offset(1.05, 1.05),
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 100),
+        )
+      ],
       onPlay: (controller) => controller.forward(from: 0),
       child: GestureDetector(
         onTap: _play,
@@ -150,7 +157,7 @@ class _SoundTileState extends State<SoundTile> with TickerProviderStateMixin {
               ),
             ),
           ],
-        ).animate().boxShadow(color: Colors.pinkAccent, blurRadius: 10),
+        ),
       ),
     );
   }
