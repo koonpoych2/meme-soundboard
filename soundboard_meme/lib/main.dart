@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/sound_provider.dart';
 import 'screens/home_page.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +17,9 @@ class MyApp extends StatelessWidget {
       create: (_) => SoundProvider(),
       child: MaterialApp(
         title: 'Meme Sound Board',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: AppTheme.theme,
         home: const HomePage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

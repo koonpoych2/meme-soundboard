@@ -25,6 +25,15 @@ class SoundProvider extends ChangeNotifier {
       category: 'Test',
       isFavorite: false,
     ),
+    Sound(
+      id: '3',
+      name: 'Wait What',
+      assetPath: 'sounds/WAIT..WHAT.mp3',
+      imagePath:
+          'assets/images/Plankton Aughhhhh.jpg', // Using same image as placeholder
+      category: 'Funny',
+      isFavorite: false,
+    ),
   ];
 
   String _searchQuery = '';
