@@ -131,22 +131,33 @@ class SoundTile extends StatefulWidget {
 
 class _SoundTileState extends State<SoundTile> {
   late final AudioPlayer _player;
+  late final SoundProvider _provider;
+
+  void _onProviderChanged() {
+    _player.setReleaseMode(
+      _provider.isLooping ? ReleaseMode.loop : ReleaseMode.stop,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _player = AudioPlayer();
+    _provider = Provider.of<SoundProvider>(context, listen: false);
+    _provider.addListener(_onProviderChanged);
+    _onProviderChanged();
   }
 
   @override
   void dispose() {
+    _provider.removeListener(_onProviderChanged);
     _player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SoundProvider>(context, listen: false);
+    final provider = _provider;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
