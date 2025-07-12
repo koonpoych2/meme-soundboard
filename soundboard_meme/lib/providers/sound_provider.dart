@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/sound.dart';
+import '../services/download_service.dart';
 
 class SoundProvider extends ChangeNotifier {
   // Start with an empty list of sounds. Add your own
@@ -27,12 +28,17 @@ class SoundProvider extends ChangeNotifier {
 
   String _searchQuery = '';
   String _category = 'All';
+  List<String> _downloadedSounds = [];
+  bool _isDownloading = false;
 
   SoundProvider() {
     _loadFavorites();
+    _loadDownloadedSounds();
   }
 
   String get category => _category;
+  List<String> get downloadedSounds => _downloadedSounds;
+  bool get isDownloading => _isDownloading;
 
   List<Sound> get sounds {
     var list = _sounds;
@@ -87,6 +93,41 @@ class SoundProvider extends ChangeNotifier {
 
   void setSearch(String query) {
     _searchQuery = query;
+    notifyListeners();
+  }
+
+  Future<void> _loadDownloadedSounds() async {
+    _downloadedSounds = await DownloadService.getDownloadedSounds();
+    notifyListeners();
+  }
+
+  Future<String?> downloadSound(Sound sound) async {
+    _isDownloading = true;
+    notifyListeners();
+
+    try {
+      final filePath = await DownloadService.downloadSound(sound);
+      if (filePath != null) {
+        _downloadedSounds.add(filePath);
+        notifyListeners();
+      }
+      return filePath;
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isDownloading = false;
+      notifyListeners();
+    }
+  }
+
+  bool isSoundDownloaded(Sound sound) {
+    final fileName =
+        '${sound.name.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_')}.mp3';
+    return _downloadedSounds.any((path) => path.contains(fileName));
+  }
+
+  void removeDownloadedSound(String filePath) {
+    _downloadedSounds.remove(filePath);
     notifyListeners();
   }
 }
