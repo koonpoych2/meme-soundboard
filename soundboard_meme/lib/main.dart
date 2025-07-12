@@ -16,7 +16,11 @@ class MyApp extends StatelessWidget {
       create: (_) => SoundProvider(),
       child: MaterialApp(
         title: 'Meme Sound Board',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: Colors.pinkAccent,
+          scaffoldBackgroundColor: Colors.orange[50],
+        ),
         home: const HomePage(),
       ),
     );

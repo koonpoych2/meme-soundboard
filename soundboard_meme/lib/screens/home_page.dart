@@ -67,6 +67,13 @@ class _HomePageState extends State<HomePage> {
                                 child: ChoiceChip(
                                   label: Text(c),
                                   selected: provider.category == c,
+                                  selectedColor: Colors.pinkAccent,
+                                  backgroundColor: Colors.white,
+                                  labelStyle: TextStyle(
+                                    color: provider.category == c
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                   onSelected: (_) => provider.setCategory(c),
                                 ),
                               ),
@@ -87,6 +94,8 @@ class _HomePageState extends State<HomePage> {
                   : provider.favoriteSounds,
             ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.pinkAccent,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -189,11 +198,12 @@ class _SoundTileState extends State<SoundTile> {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.pinkAccent, width: 3),
             image: DecorationImage(
               image: AssetImage(widget.sound.imagePath),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
-                Colors.black.withValues(alpha: .25),
+                Colors.black.withOpacity(0.25),
                 BlendMode.darken,
               ),
             ),
