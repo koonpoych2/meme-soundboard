@@ -1,10 +1,11 @@
 # soundboard_meme
 
-A new Flutter project.
+A colorful meme soundboard built with Flutter.
 
 ## Features
 
 - Global loop toggle button to repeat sounds continuously.
+- Kid-friendly bright theme for an engaging experience.
 
 ## Getting Started
 
