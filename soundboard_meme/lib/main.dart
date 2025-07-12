@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         title: 'Meme Sound Board',
         theme: ThemeData(
           colorScheme: ColorScheme.dark(
-            background: const Color(0xFF121212),
+            surface: const Color(0xFF121212),
             primary: const Color(0xFF9C27B0),
             secondary: Colors.tealAccent.shade200,
           ),

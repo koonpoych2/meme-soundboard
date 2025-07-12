@@ -25,10 +25,12 @@ class CategoryChips extends StatelessWidget {
                 child: ChoiceChip(
                   label: Text(c, style: GoogleFonts.rubik()),
                   selected: selected == c,
-                  selectedColor: theme.colorScheme.primary.withOpacity(0.3),
+                  selectedColor:
+                      theme.colorScheme.primary.withAlpha((0.3 * 255).round()),
                   onSelected: (_) => onSelected(c),
                   backgroundColor:
-                      theme.colorScheme.surfaceVariant.withOpacity(0.2),
+                      theme.colorScheme.surfaceContainerHighest
+                          .withAlpha((0.2 * 255).round()),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                     side: BorderSide(color: theme.colorScheme.outline),

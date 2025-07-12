@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -55,7 +54,8 @@ class _SoundCardState extends State<SoundCard> {
     return GestureDetector(
       onTap: _play,
       child: Card(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.1),
+        color: theme.colorScheme.surfaceContainerHighest
+            .withAlpha((0.1 * 255).round()),
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         clipBehavior: Clip.antiAlias,
@@ -65,7 +65,7 @@ class _SoundCardState extends State<SoundCard> {
               child: Image.asset(
                 widget.sound.imagePath,
                 fit: BoxFit.cover,
-                color: Colors.black.withOpacity(0.25),
+                color: const Color.fromRGBO(0, 0, 0, 0.25),
                 colorBlendMode: BlendMode.darken,
               ),
             ),
@@ -142,7 +142,7 @@ class _SoundCardState extends State<SoundCard> {
               bottom: 0,
               child: Container(
                 padding: const EdgeInsets.all(8),
-                color: Colors.black.withOpacity(0.4),
+                color: const Color.fromRGBO(0, 0, 0, 0.4),
                 child: Text(
                   widget.sound.name,
                   textAlign: TextAlign.center,

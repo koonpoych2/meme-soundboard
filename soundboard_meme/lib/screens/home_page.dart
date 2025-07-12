@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:open_filex/open_filex.dart';
-import 'dart:io';
 import '../providers/sound_provider.dart';
 import '../models/sound.dart';
 import 'downloads_screen.dart';

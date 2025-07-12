@@ -16,7 +16,8 @@ class SearchBar extends StatelessWidget {
         hintStyle: GoogleFonts.rubik(color: Colors.grey.shade400),
         prefixIcon: const Icon(Icons.search, color: Colors.grey),
         filled: true,
-        fillColor: theme.colorScheme.surfaceVariant.withOpacity(0.1),
+        fillColor: theme.colorScheme.surfaceContainerHighest
+            .withAlpha((0.1 * 255).round()),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(color: Colors.grey.shade700),
