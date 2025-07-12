@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/sound.dart';
 
 class SoundProvider extends ChangeNotifier {
+  bool _isLooping = false;
   // Start with an empty list of sounds. Add your own
   // entries pointing to assets in `assets/sounds` and
   // `assets/images`.
@@ -33,6 +34,8 @@ class SoundProvider extends ChangeNotifier {
   }
 
   String get category => _category;
+
+  bool get isLooping => _isLooping;
 
   List<Sound> get sounds {
     var list = _sounds;
@@ -87,6 +90,11 @@ class SoundProvider extends ChangeNotifier {
 
   void setSearch(String query) {
     _searchQuery = query;
+    notifyListeners();
+  }
+
+  void toggleLooping() {
+    _isLooping = !_isLooping;
     notifyListeners();
   }
 }
