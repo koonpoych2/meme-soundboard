@@ -174,9 +174,9 @@ class _SoundTileState extends State<SoundTile> {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      onLongPress: () {
-        _showSoundOptions(context, sound, provider);
-      },
+      // onLongPress: () {
+      //   _showSoundOptions(context, widget.sound, provider);
+      // },
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         splashColor: Colors.white24,
@@ -249,7 +249,7 @@ class _SoundTileState extends State<SoundTile> {
                 left: 1,
                 child: Consumer<SoundProvider>(
                   builder: (context, soundProvider, child) {
-                    final isDownloaded = soundProvider.isSoundDownloaded(sound);
+                    final isDownloaded = soundProvider.isSoundDownloaded(widget.sound);
                     final isDownloading = soundProvider.isDownloading;
 
                     return IconButton(
@@ -274,11 +274,11 @@ class _SoundTileState extends State<SoundTile> {
                           ? null
                           : () async {
                               try {
-                                await soundProvider.downloadSound(sound);
+                                await soundProvider.downloadSound(widget.sound);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      '${sound.name} downloaded successfully!',
+                                      '${widget.sound.name} downloaded successfully!',
                                     ),
                                     backgroundColor: Colors.green,
                                   ),
@@ -287,7 +287,7 @@ class _SoundTileState extends State<SoundTile> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Failed to download ${sound.name}: $e',
+                                      'Failed to download ${widget.sound.name}: $e',
                                     ),
                                     backgroundColor: Colors.red,
                                   ),
@@ -305,7 +305,7 @@ class _SoundTileState extends State<SoundTile> {
                 left: 1,
                 child: Consumer<SoundProvider>(
                   builder: (context, soundProvider, child) {
-                    final isDownloaded = soundProvider.isSoundDownloaded(sound);
+                    final isDownloaded = soundProvider.isSoundDownloaded(widget.sound);
                     final isDownloading = soundProvider.isDownloading;
 
                     return IconButton(
@@ -330,11 +330,11 @@ class _SoundTileState extends State<SoundTile> {
                           ? null
                           : () async {
                               try {
-                                await soundProvider.downloadSound(sound);
+                                await soundProvider.downloadSound(widget.sound);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      '${sound.name} downloaded successfully!',
+                                      '${widget.sound.name} downloaded successfully!',
                                     ),
                                     backgroundColor: Colors.green,
                                   ),
@@ -343,7 +343,7 @@ class _SoundTileState extends State<SoundTile> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Failed to download ${sound.name}: $e',
+                                      'Failed to download ${widget.sound.name}: $e',
                                     ),
                                     backgroundColor: Colors.red,
                                   ),
