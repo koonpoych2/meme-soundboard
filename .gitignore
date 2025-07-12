@@ -1,2 +1,5 @@
 ﻿soundboard_meme/.dart_tool
 soundboard_meme/build
+*.bin
+*.lock
+*.probe

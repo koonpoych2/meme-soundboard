@@ -32,6 +32,14 @@ class _HomePageState extends State<HomePage> {
               ? 'Favorite Sounds'
               : 'Meme Sound Board',
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              provider.isLooping ? Icons.repeat_on : Icons.repeat,
+            ),
+            onPressed: provider.toggleLooping,
+          ),
+        ],
         bottom: !isFavoritesPage && !isDownloadsPage
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(80),
@@ -126,28 +134,63 @@ class SoundGridScreen extends StatelessWidget {
   }
 }
 
-class SoundTile extends StatelessWidget {
+class SoundTile extends StatefulWidget {
   final Sound sound;
   const SoundTile({super.key, required this.sound});
 
   @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<SoundProvider>(context, listen: false);
+  State<SoundTile> createState() => _SoundTileState();
+}
 
-    return GestureDetector(
-      onTap: () async {
-        final player = AudioPlayer();
-        await player.play(AssetSource(sound.assetPath));
-      },
+class _SoundTileState extends State<SoundTile> {
+  late final AudioPlayer _player;
+  late final SoundProvider _provider;
+
+  void _onProviderChanged() {
+    _player.setReleaseMode(
+      _provider.isLooping ? ReleaseMode.loop : ReleaseMode.stop,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _player = AudioPlayer();
+    _provider = Provider.of<SoundProvider>(context, listen: false);
+    _provider.addListener(_onProviderChanged);
+    _onProviderChanged();
+  }
+
+  @override
+  void dispose() {
+    _provider.removeListener(_onProviderChanged);
+    _player.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = _provider;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
       onLongPress: () {
         _showSoundOptions(context, sound, provider);
       },
-      child: ClipRRect(
+      child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        child: Container(
+        splashColor: Colors.white24,
+        onTap: () async {
+          await _player.stop();
+          await _player.setReleaseMode(
+              provider.isLooping ? ReleaseMode.loop : ReleaseMode.stop);
+          await _player.play(AssetSource(widget.sound.assetPath));
+        },
+        child: Ink(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
             image: DecorationImage(
-              image: AssetImage(sound.imagePath),
+              image: AssetImage(widget.sound.imagePath),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                 Colors.black.withValues(alpha: .25),
@@ -171,7 +214,7 @@ class SoundTile extends StatelessWidget {
                     color: Colors.black.withValues(alpha: .4),
                   ),
                   child: Text(
-                    sound.name,
+                    widget.sound.name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -183,16 +226,76 @@ class SoundTile extends StatelessWidget {
                 ),
               ),
 
+
               // Favorite Icon at top right
               Positioned(
                 top: 1,
                 right: 1,
                 child: IconButton(
                   icon: Icon(
-                    sound.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: sound.isFavorite ? Colors.red : Colors.white,
+                    widget.sound.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color:
+                        widget.sound.isFavorite ? Colors.red : Colors.white,
                   ),
-                  onPressed: () => provider.toggleFavorite(sound),
+                  onPressed: () => provider.toggleFavorite(widget.sound),
+                ),
+              ),
+
+              // Download Icon at top left
+              Positioned(
+                top: 1,
+                left: 1,
+                child: Consumer<SoundProvider>(
+                  builder: (context, soundProvider, child) {
+                    final isDownloaded = soundProvider.isSoundDownloaded(sound);
+                    final isDownloading = soundProvider.isDownloading;
+
+                    return IconButton(
+                      icon: isDownloading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : Icon(
+                              isDownloaded
+                                  ? Icons.download_done
+                                  : Icons.download,
+                              color: isDownloaded ? Colors.green : Colors.white,
+                            ),
+                      onPressed: isDownloading || isDownloaded
+                          ? null
+                          : () async {
+                              try {
+                                await soundProvider.downloadSound(sound);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${sound.name} downloaded successfully!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to download ${sound.name}: $e',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                    );
+                  },
                 ),
               ),
 
