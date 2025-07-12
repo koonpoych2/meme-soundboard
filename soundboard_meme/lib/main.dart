@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'providers/sound_provider.dart';
 import 'screens/home_page.dart';
 
@@ -16,7 +17,13 @@ class MyApp extends StatelessWidget {
       create: (_) => SoundProvider(),
       child: MaterialApp(
         title: 'Meme Sound Board',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          textTheme: GoogleFonts.lilitaOneTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
         home: const HomePage(),
       ),
     );
